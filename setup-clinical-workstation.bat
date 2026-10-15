@@ -83,10 +83,11 @@ if exist "%ProgramFiles(x86)%\Citrix\ICA Client\SelfServicePlugin\SelfService.ex
 
 REM ---- 5. Windows network tuning for Epic over Citrix -------------------------
 REM  [ORIGINAL] in purpose: the script automatically improved network settings
-REM  on Windows for clinical Epic use.
-REM  [RECONSTRUCTED] in exact settings. The tweaks below reflect common
-REM  Epic-over-WAN guidance of the era. Re-validate against current
-REM  Epic and Citrix documentation before use.
+REM  on Windows for clinical Epic use. The author recalls borrowing these
+REM  tweaks from Chris Titus Tech's Ultimate Windows Utility (winutil).
+REM  [RECONSTRUCTED] in exact settings. The tweaks below are standard
+REM  equivalents - re-validate against current Epic and Citrix documentation
+REM  before use.
 call :log "Applying network tuning..."
 REM Constrain TCP auto-tuning: unrestricted auto-tuning could starve thin ICA sessions.
 netsh interface tcp set global autotuninglevel=restricted >> "%LOG%" 2>&1
@@ -94,7 +95,28 @@ REM Era-accurate: disable chimney offload, a known source of flaky ICA sessions.
 netsh interface tcp set global chimney=disabled >> "%LOG%" 2>&1
 call :log "Network tuning applied."
 
-REM ---- 6. Connectivity test ---------------------------------------------------
+REM ---- 6. Telemetry removal ----------------------------------------------------
+REM  [ORIGINAL] in purpose: the script stripped Windows telemetry, with the
+REM  approach borrowed from Chris Titus Tech's Ultimate Windows Utility.
+REM  [RECONSTRUCTED] in exact commands - standard equivalents below.
+REM  Credit: https://github.com/ChrisTitusTech/winutil (MIT licensed).
+call :log "Removing Windows telemetry..."
+REM Disable telemetry via group policy registry key.
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f >> "%LOG%" 2>&1
+REM Disable the Connected User Experiences and Telemetry service.
+sc stop DiagTrack >nul 2>&1
+sc config DiagTrack start= disabled >> "%LOG%" 2>&1
+REM Disable the dmwappushservice (telemetry push).
+sc stop dmwappushsvc >nul 2>&1
+sc config dmwappushsvc start= disabled >> "%LOG%" 2>&1
+REM Disable telemetry scheduled tasks.
+schtasks /Change /TN "\Microsoft\Windows\Customer Experience Improvement Program\Consolidator" /Disable >nul 2>&1
+schtasks /Change /TN "\Microsoft\Windows\Customer Experience Improvement Program\UsbCeip" /Disable >nul 2>&1
+schtasks /Change /TN "\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser" /Disable >nul 2>&1
+schtasks /Change /TN "\Microsoft\Windows\Application Experience\ProgramDataUpdater" /Disable >nul 2>&1
+call :log "Telemetry removal applied."
+
+REM ---- 7. Connectivity test ---------------------------------------------------
 REM  [ORIGINAL] the script configured AND tested the connection.
 REM  [RECONSTRUCTED] exact test method: reach the Epic host and confirm the
 REM  StoreFront discovery endpoint answers over HTTPS.
@@ -108,7 +130,7 @@ if %errorlevel% neq 0 (
 powershell -NoProfile -ExecutionPolicy Bypass -Command "try { 'StoreFront HTTPS status: ' + (Invoke-WebRequest -Uri '%STORE_URL%' -UseBasicParsing -TimeoutSec 15).StatusCode } catch { 'StoreFront HTTPS FAILED: ' + $_.Exception.Message }" >> "%LOG%" 2>&1
 call :log "StoreFront reachability check done - see log for result."
 
-REM ---- 7. Cleanup --------------------------------------------------------------
+REM ---- 8. Cleanup --------------------------------------------------------------
 del /f /q "%INSTALLER_EXE%" 2>nul
 call :log "Installer cleaned up."
 call :log "=== Done. Workstation provisioned. ==="
