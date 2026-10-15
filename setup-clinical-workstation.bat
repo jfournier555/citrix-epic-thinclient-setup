@@ -10,7 +10,7 @@ REM  reach the Epic EHR server back at the hospital -- plus automatic Windows
 REM  network tuning for clinical use. No other clinical training specialist
 REM  had automated it. It got the author promoted.
 REM
-REM  The original file is lost. This is rebuilt from the author's memory.
+REM  The original file is lost. This is rebuilt from  memory.
 REM  Blocks tagged [ORIGINAL] are as remembered. Blocks tagged [RECONSTRUCTED]
 REM  fill gaps with standard Citrix/Epic deployment practice of the era.
 REM  Validate every default before pointing this at real infrastructure.
@@ -19,7 +19,7 @@ REM ==========================================================================
 REM ============================ CONFIG ======================================
 REM  Everything site-specific lives here. Change these, nothing else.
 
-set "INSTALLER_URL=https://downloadplugins.citrix.com/your-org/CitrixWorkspaceApp.exe"
+set "INSTALLER_URL=https://downloadplugins.citrix.com/[your-org]/CitrixWorkspaceApp.exe"
 set "INSTALLER_EXE=%TEMP%\CitrixWorkspaceApp.exe"
 
 set "STORE_NAME=ClinicalApps"
