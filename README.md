@@ -12,7 +12,7 @@ A one-click `.bat` installer that provisioned ambulatory-site workstations for E
 
 ## The story
 
-Written ~2016–2018 at MemorialCare, where the author was a clinical training specialist. Ambulatory sites needed Citrix stood up by hand, machine by machine. This script turned it into one double-click: install, configure, tune, test. No other clinical training specialist had automated it — and it got him promoted.
+Written ~2016–2018 at MemorialCare, where I was a clinical training specialist. Ambulatory sites needed Citrix stood up by hand, machine by machine. This script turned it into one double-click: install, configure, tune, test. No other clinical training specialist had automated it.
 
 ## The reconstruction
 
