@@ -20,7 +20,7 @@ The original file is lost — it never made it off a work machine into a persona
 
 - Blocks tagged **[ORIGINAL]** are as remembered: the one-click flow, the Citrix download, the silent install with store preconfiguration, the automatic network tuning, the telemetry stripping, the configure-and-test loop.
 - Blocks tagged **[RECONSTRUCTED]** fill gaps with standard Citrix/Epic deployment practice of the era: the exact installer flags, the verification method, the specific `netsh` tweaks, the telemetry-removal commands, the HTTPS reachability check.
-- The network-improvement and telemetry-removal sections were borrowed from **Chris Titus Tech's Ultimate Windows Utility** ([winutil](https://github.com/ChrisTitusTech/winutil), MIT licensed) — per the author's recollection; the exact borrowed lines are reconstructed as standard equivalents.
+- The network-improvement and telemetry-removal sections were borrowed from **Chris Titus Tech's Ultimate Windows Utility** ([winutil](https://github.com/ChrisTitusTech/winutil), MIT licensed) 
 
 ## Usage
 
